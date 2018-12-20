@@ -1,5 +1,5 @@
 module.exports = {
-    index(req, re, next){
+    index(req, res, next){
         res.render("static/index", {title: "Welcome to Bloccit"});
     }
 }
