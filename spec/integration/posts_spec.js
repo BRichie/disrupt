@@ -73,7 +73,34 @@ const Post = require("../../src/db/models").Post;
            });
          });
      });
-  });
+
+     it("should not create a new post that fails validations", (done) => {
+       const options = {
+         url: `${base}/${this.topic.id}/posts/create`,
+         form: {
+
+
+           title: "a",
+           body: "b"
+         }
+       };
+
+       request.post(options,
+         (err, res, body) => {
+
+
+           Post.findOne({where: {title: "a"}})
+           .then((post) => {
+               expect(post).toBeNull();
+               done();
+           })
+           .catch((err) => {
+             console.log(err);
+             done();
+           });
+         });
+        });
+     });
   
   describe("GET /topics/:topicId/posts/:id", () => {
     it("should render a view with the selected post", (done) => {
@@ -94,7 +121,7 @@ const Post = require("../../src/db/models").Post;
           expect(err).toBeNull();
           expect(post).toBeNull();
           done();
-        })
+        });
       });
     });
   });
@@ -129,7 +156,8 @@ const Post = require("../../src/db/models").Post;
         const options = {
           url: `${base}/${this.topic.id}/posts/${this.post.id}/update`,
           form: {
-            title: "Snowman Building Competition"
+            title: "Snowman Building Competition",
+            body: "I love watching them melt slowly."
           }
         };
         request.post(options,
@@ -149,6 +177,7 @@ const Post = require("../../src/db/models").Post;
 
    });
 });
+
  
 
   
