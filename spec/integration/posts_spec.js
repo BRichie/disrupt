@@ -1,26 +1,27 @@
 const request = require("request");
 const server = require("../../src/server");
 const base = "http://localhost:3000/topics";
+
 const sequelize = require("../../src/db/models/index").sequelize;
 const Topic = require("../../src/db/models").Topic;
 const Post = require("../../src/db/models").Post;
 
- describe("routes : posts", () => {
+describe("routes : posts", () => {
 
-   beforeEach((done) => {
+  beforeEach((done) => {
     this.topic;
     this.post;
 
-     sequelize.sync({force: true}).then((res) => {
+    sequelize.sync({force: true}).then((res) => {
 
-       Topic.create({
+      Topic.create({
         title: "Winter Games",
         description: "Post your Winter Games stories."
       })
       .then((topic) => {
         this.topic = topic;
 
-         Post.create({
+        Post.create({
           title: "Snowball Fighting",
           body: "So much snow!",
           topicId: this.topic.id
@@ -37,8 +38,7 @@ const Post = require("../../src/db/models").Post;
     });
   });
 
-   describe("GET /topics/:topicId/posts/new", () => {
-    
+  describe("GET /topics/:topicId/posts/new", () => {
     it("should render a new post form", (done) => {
       request.get(`${base}/${this.topic.id}/posts/new`, (err, res, body) => {
         expect(err).toBeNull();
@@ -47,10 +47,9 @@ const Post = require("../../src/db/models").Post;
       });
     });
   });
-  
   describe("POST /topics/:topicId/posts/create", () => {
 
-     it("should create a new post and redirect", (done) => {
+    it("should create a new post and redirect", (done) => {
        const options = {
          url: `${base}/${this.topic.id}/posts/create`,
          form: {
@@ -74,7 +73,6 @@ const Post = require("../../src/db/models").Post;
          });
      });
   });
-  
   describe("GET /topics/:topicId/posts/:id", () => {
     it("should render a view with the selected post", (done) => {
       request.get(`${base}/${this.topic.id}/posts/${this.post.id}`, (err, res, body) => {
@@ -84,7 +82,6 @@ const Post = require("../../src/db/models").Post;
       });
     });
   });
-  
   describe("POST /topics/:topicId/posts/:id/destroy", () => {
     it("should delete the post with the associated ID", (done) => {
       expect(this.post.id).toBe(1);
@@ -98,7 +95,6 @@ const Post = require("../../src/db/models").Post;
       });
     });
   });
-  
   describe("GET /topics/:topicId/posts/:id/edit", () => {
     it("should render a view with an edit post form", (done) => {
       request.get(`${base}/${this.topic.id}/posts/${this.post.id}/edit`, (err, res, body) => {
@@ -109,10 +105,9 @@ const Post = require("../../src/db/models").Post;
       });
     });
   });
-  
   describe("POST /topics/:topicId/posts/:id/update", () => {
 
-     it("should return a status code 302", (done) => {
+    it("should return a status code 302", (done) => {
       request.post({
         url: `${base}/${this.topic.id}/posts/${this.post.id}/update`,
         form: {
@@ -125,7 +120,7 @@ const Post = require("../../src/db/models").Post;
       });
     });
 
-     it("should update the post with the given values", (done) => {
+    it("should update the post with the given values", (done) => {
         const options = {
           url: `${base}/${this.topic.id}/posts/${this.post.id}/update`,
           form: {
@@ -135,9 +130,9 @@ const Post = require("../../src/db/models").Post;
         request.post(options,
           (err, res, body) => {
 
-           expect(err).toBeNull();
+          expect(err).toBeNull();
 
-           Post.findOne({
+          Post.findOne({
             where: {id: this.post.id}
           })
           .then((post) => {
@@ -145,10 +140,11 @@ const Post = require("../../src/db/models").Post;
             done();
           });
         });
-      });
+    });
 
-   });
+  });
 });
+
  
 
   
