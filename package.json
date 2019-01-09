@@ -7,7 +7,7 @@
     "test": "export NODE_ENV=test && jasmine",
     "start": "node src/server.js"
   },
-  "author": "",
+  "author": "B c R",
   "license": "ISC",
   "devDependencies": {
     "faker": "^4.1.0",
