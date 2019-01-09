@@ -5,7 +5,7 @@ const User = require("../../src/db/models").User;
 describe("User", () => {
 
   beforeEach((done) => {
-// #1
+
     sequelize.sync({force: true})
     .then(() => {
       done();
@@ -36,7 +36,7 @@ describe("User", () => {
       });
     });
 
-// #3
+
     it("should not create a user with invalid email or password", (done) => {
       User.create({
         email: "It's-a me, Mario!",
@@ -44,9 +44,7 @@ describe("User", () => {
       })
       .then((user) => {
 
-        // The code in this block will not be evaluated since the validation error
-        // will skip it. Instead, we'll catch the error in the catch block below
-        // and set the expectations there.
+      
 
         done();
       })
@@ -59,7 +57,7 @@ describe("User", () => {
 
     it("should not create a user with an email already taken", (done) => {
 
-// #5
+
       User.create({
         email: "user@example.com",
         password: "1234567890"

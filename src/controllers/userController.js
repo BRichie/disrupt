@@ -7,9 +7,6 @@ module.exports = {
       res.render("users/sign_up");
     },
 
-    signInForm(req, res, next){
-        res.render("users/sign_in");
-      },
     create(req, res, next){
        
              let newUser = {
@@ -31,6 +28,11 @@ module.exports = {
                }
              });
            },
+
+           signInForm(req, res, next){
+            res.render("users/sign_in");
+          },
+          
            signIn(req, res, next){
             passport.authenticate("local")(req, res, function () {
               if(!req.user){

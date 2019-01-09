@@ -29,6 +29,8 @@ describe("routes : users", () => {
       });
     });
 
+  });
+
     describe("POST /users", () => {
 
       // #1
@@ -42,10 +44,9 @@ describe("routes : users", () => {
               }
             }
       
-            request.post(options,
-              (err, res, body) => {
+            request.post(options, (err, res, body) => {
       
-      // #2
+    
                 User.findOne({where: {email: "user@example.com"}})
                 .then((user) => {
                   expect(user).not.toBeNull();
@@ -57,11 +58,10 @@ describe("routes : users", () => {
                   console.log(err);
                   done();
                 });
-              }
-            );
+              });
           });
       
-      // #3
+   
           it("should not create a new user with invalid attributes and redirect", (done) => {
             request.post(
               {
@@ -83,6 +83,7 @@ describe("routes : users", () => {
                 });
               });
           });
+        });
 
           describe("GET /users/sign_in", () => {
 
@@ -98,6 +99,5 @@ describe("routes : users", () => {
       
         });
 
-  });
+  
 
-});
