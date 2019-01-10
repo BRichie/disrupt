@@ -24,6 +24,10 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Post.associate = function(models) {
     // associations can be defined here
+    Post.hasMany(models.Comment, {
+      foreignKey: "postId",
+      as: "comments"
+    });
 
     Post.belongsTo(models.Topic, {
       foreignKey: "topicId",
@@ -36,5 +40,8 @@ module.exports = (sequelize, DataTypes) => {
     });
  
   };
+  Post.prototype.isOwner=function(){
+    return this.userId === this.foreignKey;
+  }
   return Post;
 };
