@@ -29,6 +29,7 @@ module.exports = {
       callback(err);
     })
   },
+  
   getTopic(id, callback){
    
     return Topic.findById(id, {
@@ -46,15 +47,15 @@ module.exports = {
   },
   deleteTopic(req, callback){
 
-    // #1
+    
         return Topic.findById(req.params.id)
         .then((topic) => {
    
-    // #2
+    
           const authorized = new Authorizer(req.user, topic).destroy();
    
           if(authorized) {
-    // #3
+   
             topic.destroy()
             .then((res) => {
               callback(null, topic);
@@ -71,23 +72,21 @@ module.exports = {
           callback(err);
         });
       },
+      
       updateTopic(req, updatedTopic, callback){
 
-        // #1
+       
              return Topic.findById(req.params.id)
              .then((topic) => {
         
-        // #2
                if(!topic){
                  return callback("Topic not found");
                }
         
-        // #3
                const authorized = new Authorizer(req.user, topic).update();
         
                if(authorized) {
         
-        // #4
                  topic.update(updatedTopic, {
                    fields: Object.keys(updatedTopic)
                  })

@@ -9,19 +9,18 @@
     <main class="container">
 
         <% include ../static/partials/messages.ejs %>
+          <h1><%= post.title %></h1>
+          <p><%= post.body %></p>
 
-      <h1><%= post.title %></h1>
+      <% if(currentUser && (currentUser.isAdmin() || currentUser.id == post.userId)) { %>
       <a href="/topics/<%= post.topicId %>/posts/<%= post.id %>/edit" class="btn btn-warning">Edit</a>
-      <small class="text-muted" id="titleHelp">title must be 2 or more characters in length.</small>
-
-
-
-      <form style="display:initial" action="/topics/<%= post.topicId %>/posts/<%= post.id %>/destroy" method="post">
-        <button type="submit" class="btn btn-danger">Delete</button>
+        <form style="display:initial" action="/topics/<%= post.topicId %>/posts/<%= post.id %>/destroy" method="post">
+          <button type="submit" class="btn btn-danger">Delete</button>
+        
       </form>
+      <% } %>
+      <a href="/topics/<%= post.topicId %>" class="btn btn-info">Back to Topic </a>
 
-      <p><%= post.body %></p>
-      <small class="text-muted" id="bodyHelp">body must be 10 or more characters in length.</small>
 
 
     </main>

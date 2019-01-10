@@ -103,12 +103,12 @@ describe("Post", () => {
           })
           .then((newTopic) => {
    
-   // #2
+   
             expect(this.post.topicId).toBe(this.topic.id);
-   // #3
+   
             this.post.setTopic(newTopic)
             .then((post) => {
-   // #4
+   
               expect(post.topicId).toBe(newTopic.id);
               done();
    
@@ -131,44 +131,42 @@ describe("Post", () => {
         });
    
       });
+      
       describe("#setUser()", () => {
 
         it("should associate a post and a user together", (done) => {
-   
           User.create({
-            email: "ada@example.com",
-            password: "password"
+            email: "test@example.com",
+            password: "123456789"
           })
           .then((newUser) => {
-   
             expect(this.post.userId).toBe(this.user.id);
-   
             this.post.setUser(newUser)
             .then((post) => {
-   
               expect(this.post.userId).toBe(newUser.id);
               done();
-   
             });
           })
         });
-   
       });
-   
+    
       describe("#getUser()", () => {
-   
+    
         it("should return the associated topic", (done) => {
-   
           this.post.getUser()
           .then((associatedUser) => {
             expect(associatedUser.email).toBe("starman@tesla.com");
             done();
           });
-   
         });
-   
       });
+    
 
- });
+ 
+ 
+ 
+    });
+
+
    
    
