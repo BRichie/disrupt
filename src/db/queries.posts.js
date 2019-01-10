@@ -2,7 +2,8 @@ const Post = require("./models").Post;
 const Topic = require("./models").Topic;
 const Comment = require("./models").Comment;
  const User = require("./models").User;
- 
+ const Authorizer = require("../policies/post");
+
 
 module.exports = {
     
@@ -32,15 +33,21 @@ module.exports = {
         })
       },
       deletePost(id, callback){
-        return Post.destroy({
-          where: { id }
-        })
-        .then((deletedRecordsCount) => {
-          callback(null, deletedRecordsCount);
+        return Post.findById(req.params.id)
+        .then((post) => {
+          const authorized = new Authorizer(req.user, post).destroy();
+            if(authorized){
+              post.destroy()
+                .then((res) => {
+                  callback(null, res);
+                });
+            } else {
+              req.flash("notice", "You are not authorized to do that")
+            }
         })
         .catch((err) => {
           callback(err);
-        })
+        });
       },
       updatePost(id, updatedPost, callback){
         return Post.findById(id)
