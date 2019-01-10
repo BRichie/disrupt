@@ -12,7 +12,6 @@ describe("routes : comments", () => {
 
   beforeEach((done) => {
 
-// #2
     this.user;
     this.topic;
     this.post;
@@ -20,7 +19,7 @@ describe("routes : comments", () => {
 
     sequelize.sync({force: true}).then((res) => {
 
-// #3
+
       User.create({
         email: "starman@tesla.com",
         password: "Trekkie4lyfe"
@@ -69,7 +68,7 @@ describe("routes : comments", () => {
   });
 
   describe("guest attempting to perform CRUD actions for Comment", () => {
-    beforeEach((done) => {    // before each suite in this context
+    beforeEach((done) => {    
         request.get({           // mock authentication
           url: "http://localhost:3000/auth/fake",
           form: {
@@ -82,7 +81,7 @@ describe("routes : comments", () => {
         );
       });
  
- // #3
+
       describe("POST /topics/:topicId/posts/:postId/comments/create", () => {
  
         it("should not create a new comment", (done) => {
@@ -94,7 +93,7 @@ describe("routes : comments", () => {
           };
           request.post(options,
             (err, res, body) => {
- // #4
+
               Comment.findOne({where: {body: "This comment is amazing!"}})
               .then((comment) => {
                 expect(comment).toBeNull();   // ensure no comment was created
@@ -110,15 +109,15 @@ describe("routes : comments", () => {
       });
  
  
- // #5
+ 
       describe("POST /topics/:topicId/posts/:postId/comments/:id/destroy", () => {
  
         it("should not delete the comment with the associated ID", (done) => {
           Comment.all()
           .then((comments) => {
-            const commentCountBeforeDelete = comments.length;
+            const commentCount = comments.length;
  
-            expect(commentCountBeforeDelete).toBe(1);
+            expect(commentCount).toBe(1);
  
             request.post(
               `${base}${this.topic.id}/posts/${this.post.id}/comments/${this.comment.id}/destroy`,
@@ -126,7 +125,7 @@ describe("routes : comments", () => {
               Comment.all()
               .then((comments) => {
                 expect(err).toBeNull();
-                expect(comments.length).toBe(commentCountBeforeDelete);
+                expect(comments.length).toBe(commentCount);
                 done();
               })
  
@@ -152,7 +151,7 @@ describe("routes : comments", () => {
           );
         });
    
-   // #2
+ 
         describe("POST /topics/:topicId/posts/:postId/comments/create", () => {
    
           it("should create a new comment and redirect", (done) => {
@@ -180,15 +179,15 @@ describe("routes : comments", () => {
           });
         });
    
-   // #3
+   
         describe("POST /topics/:topicId/posts/:postId/comments/:id/destroy", () => {
    
           it("should delete the comment with the associated ID", (done) => {
             Comment.all()
             .then((comments) => {
-              const commentCountBeforeDelete = comments.length;
+              const commentCount = comments.length;
    
-              expect(commentCountBeforeDelete).toBe(1);
+              expect(commentCount).toBe(1);
    
               request.post(
                `${base}${this.topic.id}/posts/${this.post.id}/comments/${this.comment.id}/destroy`,
@@ -197,7 +196,7 @@ describe("routes : comments", () => {
                 Comment.all()
                 .then((comments) => {
                   expect(err).toBeNull();
-                  expect(comments.length).toBe(commentCountBeforeDelete - 1);
+                  expect(comments.length).toBe(commentCount - 1);
                   done();
                 })
    
@@ -208,7 +207,100 @@ describe("routes : comments", () => {
    
         });
    
-      }); //end context for signed in user
+      }); 
+
+      describe("Member user tries to delete another member user's comment", () => {
+        beforeEach((done) => {
+          User.create({
+            email: "meekmill@championships.com",
+            password: "goeagles",
+            role: "member"
+
+          })
+          .then((user) => {
+            request.get({
+              url: "http://localhost:3000/auth/fake",
+              form: {
+                role: user.role,
+                userId: user.id,
+                email: user.email
+              }
+            },
+              (err, res, body) => {
+                done();
+              }
+            );
+          });
+        });
+
+        describe("POST /topics/:topicId/posts/:postId/comments/:id/destroy", () => {
+          it("should NOT delete another members comment", (done) => {
+            Comment.all()
+              .then((comments) => {
+                const commentCount = comments.length;
+                expect(commentCount).toBe(1);
+                request.post(`${base}${this.topic.id}/posts/${this.post.id}/comments/${this.comment.id}/destroy`,
+                (err, res, body) => {
+                  Comment.all()
+                  .then((comments) => {
+                    expect(comments.length).toBe(commentCount);
+                    done();
+                  });
+                });
+             });            
+          })
+        });
+      });
+
+      describe("Admin user tries to delete member user's comment.", () => {
+        beforeEach((done) => {
+          User.create({
+            email: "nickefoles@eagles.com",
+            password: "1234567",
+            role: "admin"
+          })
+          .then((user) => {
+            request.get({
+              url: "http://localhost:3000/auth/fake",
+              form: {
+                role: user.role,
+                userId: user.id,
+                email: user.email
+              }
+            },
+              (err,res,body)=>{
+                done();
+              }
+            );
+          });
+        });
+
+        describe("POST /topics/:topicId/posts/postId/comments/:id/destroy", () => {
+          it("should allow admin user to delete member comments", (done) => {
+            Comment.all()
+            .then((comments) => {
+              const commentCount = comments.length;
+                expect(commentCount).toBe(1);
+                request.post(`${base}${this.topic.id}/posts/${this.post.id}/comments/${this.comment.id}/destroy`,
+                (err, res, body) => {
+                  Comment.all()
+                  .then((comments) => {
+                    expect(comments.length).toBe(commentCount - 1);
+                    done();
+                  });
+                });
+             });            
+          })
+        });
+      });
+
+
+    
+      
+       
+
+
+    
 
 
   //test suites will go there
