@@ -21,6 +21,7 @@
          vote.value = val;
          vote.save()
          .then((vote) => {
+             req.flash("notice", "Only one vote per member.")
            callback(null, vote);
          })
          .catch((err) => {

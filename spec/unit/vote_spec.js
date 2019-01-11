@@ -117,9 +117,7 @@ describe("Vote", () => {
           })
           .then((vote) => {
  
-           // the code in this block will not be evaluated since the validation error
-           // will skip it. Instead, we'll catch the error in the catch block below
-           // and set the expectations there
+          
  
             done();
  
@@ -137,7 +135,7 @@ describe("Vote", () => {
 
         it("should associate a vote and a user together", (done) => {
   
-           Vote.create({           // create a vote on behalf of this.user
+           Vote.create({          
              value: -1,
              postId: this.post.id,
              userId: this.user.id
@@ -152,10 +150,10 @@ describe("Vote", () => {
              })
              .then((newUser) => {
   
-               this.vote.setUser(newUser)  // change the vote's user reference for newUser
+               this.vote.setUser(newUser)  
                .then((vote) => {
   
-                 expect(vote.userId).toBe(newUser.id); //confirm it was updated
+                 expect(vote.userId).toBe(newUser.id); 
                  done();
   
                });
@@ -253,9 +251,48 @@ describe("Vote", () => {
         });
    
       });
+      describe("#hasUpvoteFor()", () => {
+        it("should return true if user has an upvote on this post", (done) => {
+          Vote.create({
+            value: 1,
+            postId: this.post.id,
+            userId: this.user.id
+          })
+          .then((vote) => {
+            this.post.votes = [vote];
+            const hasUpvote = this.post.hasUpvoteFor(vote.userId);
+            expect(hasUpvote).toBe(true);
+            done();
+          })
+          .catch((err) => {
+            console.log(err);
+            done();
+          });
+        });
+      });
+  
+      describe("#hasDownvoteFor()", () => {
+        it("should return true if user has an downvote on this post", (done) => {
+          Vote.create({
+            value: -1,
+            postId: this.post.id,
+            userId: this.user.id
+          })
+          .then((vote) => {
+            this.post.votes = [vote];
+            const hasDownvote = this.post.hasDownvoteFor(vote.userId);
+            expect(hasDownvote).toBe(true);
+            done();
+          })
+          .catch((err) => {
+            console.log(err);
+            done();
+          });
+        });
+      });
 
 
 
-  //suits will begin here
+  //suites will begin here
 
 });
