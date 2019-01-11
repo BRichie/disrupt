@@ -80,6 +80,9 @@ module.exports = {
       },
 
       update(req, res, next){
+
+        const authorized = new Authorizer(req.user).update();
+
         postQueries.updatePost(req, req.body, (err, post) => {
           if(err || post == null){
             res.redirect(404, `/topics/${req.params.topicId}/posts/${req.params.id}/edit`);

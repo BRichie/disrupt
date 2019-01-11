@@ -62,6 +62,10 @@ module.exports = {
           if(!post){
             return callback("Post not found");
           }
+          const authorized = new Authorizer(req.user, post).update();
+
+          if(authorized) {
+
    
           post.update(updatedPost, {
             fields: Object.keys(updatedPost)
@@ -72,10 +76,15 @@ module.exports = {
           .catch((err) => {
             callback(err);
           });
-        });
-      }
 
+          } else {
+            req.flash("notice", "You are not authorized to do that.");
+            callback("Forbidden");
+          }
+          });
+        }
+      }
+    
    
    
  
-};

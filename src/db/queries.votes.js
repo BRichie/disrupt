@@ -34,6 +34,7 @@
            postId: req.params.postId,
            userId: req.user.id
          }).then((vote) => {
+           req.flash('notice', "Thanks for the vote.")
            callback(null, vote);
          })
          .catch((err) => {

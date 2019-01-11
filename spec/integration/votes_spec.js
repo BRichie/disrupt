@@ -1,4 +1,3 @@
-// #1
 const request = require("request");
 const server = require("../../src/server");
 const base = "http://localhost:3000/topics/";
@@ -77,8 +76,7 @@ describe("routes : votes", () => {
         const options = {
           url: `${base}${this.topic.id}/posts/${this.post.id}/votes/upvote`
         };
-        request.get(options,
-          (err, res, body) => {
+        request.get(options, (err, res, body) => {
             Vote.findOne({            // look for the vote, should not find one.
               where: {
                 userId: this.user.id,
@@ -93,8 +91,7 @@ describe("routes : votes", () => {
               console.log(err);
               done();
             });
-          }
-        );
+          });
       });
 
     });
