@@ -6,6 +6,8 @@ module.exports = {
         const userRoutes = require("../routes/users");
         const commentRoutes = require("../routes/comments");
         const voteRoutes = require("../routes/votes");
+        const favoriteRoutes = require("../routes/favorites");
+
 
 
 
@@ -21,6 +23,8 @@ module.exports = {
         app.use(userRoutes);
         app.use(commentRoutes);
         app.use(voteRoutes);
+        app.use(favoriteRoutes);
+
 
 
 

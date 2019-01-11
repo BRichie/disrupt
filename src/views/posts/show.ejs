@@ -27,7 +27,13 @@
         <button type="submit" class="btn btn-danger">Delete</button>
       </form>
 
+     
+
       <p><%= post.body %></p>
+
+      <% if(currentUser) { %>
+        <% include ../favorites/favoriting.ejs %>
+      <% } %>
 
       <section id="comment-form">
 
