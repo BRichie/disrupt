@@ -2,6 +2,7 @@ const User = require("./models").User;
 const bcrypt = require("bcryptjs");
 const Post = require("./models").Post;
 const Comment = require("./models").Comment;
+const Favorite = require('./models').Favorite;
 
 module.exports = {
 
@@ -11,7 +12,7 @@ module.exports = {
     const salt = bcrypt.genSaltSync();
     const hashedPassword = bcrypt.hashSync(newUser.password, salt);
 
-// #4
+
     return User.create({
       email: newUser.email,
       password: hashedPassword
@@ -45,13 +46,21 @@ module.exports = {
              .then((comments) => {
     // #7
                result["comments"] = comments;
-               callback(null, result);
-             })
-             .catch((err) => {
-               callback(err);
-             })
-           })
-         }
-       })
-     }
+           
+            Favorite.scope({method: ["allFavorites", id]}).all()
+            .then((favorites) => {
+              result["favorites"] = favorites;
+              callback(null, result);
+            })
+
+   
+        
+              .catch((err) => {
+                callback(err);
+           });
+         });
+        });
+       }
+     });
+    }
 }
